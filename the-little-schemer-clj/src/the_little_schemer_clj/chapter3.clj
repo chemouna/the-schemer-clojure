@@ -83,3 +83,12 @@
     :else (cons (first lat) (multiinsertL new old (rest lat)) )))
 
 ; (multiinsertL 1 2 '(2 3 4 5 2 8 9))
+
+(defn multisubst
+  [new old lat]
+  (cond
+    (empty? lat) lat
+    (= old (first lat)) (cons new (multisubst new old (rest lat)))
+    :else (cons (first lat) (multisubst new old (rest lat)))))
+
+;(multisubst 2 3 '(1 3 4 3 3 6))
