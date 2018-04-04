@@ -56,3 +56,30 @@
 
 ;(subst2 "vanilla" "chocolate" "banana" '("banana" "ice" "cream" "with" "chocolate" "topping"))
 
+(defn multirember
+  [a lat]
+  (cond
+    (empty? lat) lat
+    :else (cond
+            (= a (first lat)) (rember a (rest lat))
+            :else (cons (first lat) (rember a (rest lat))))))
+
+;(multirember "banana" '("banana" "ice" "cream" "with" "banana" "topping"))
+
+(defn multiinsertR
+  [new old lat]
+  (cond
+    (empty? lat) lat
+    (= old (first lat)) (cons old (cons new (multiinsertR new old (rest lat))))
+    :else (cons (first lat) (multiinsertR new old (rest lat)) )))
+
+; (multiinsertR 1 2 '(2 3 4 5 2 8 9))
+
+(defn multiinsertL
+  [new old lat]
+  (cond
+    (empty? lat) lat
+    (= old (first lat)) (cons new (cons old (multiinsertL new old (rest lat))))
+    :else (cons (first lat) (multiinsertL new old (rest lat)) )))
+
+; (multiinsertL 1 2 '(2 3 4 5 2 8 9))
