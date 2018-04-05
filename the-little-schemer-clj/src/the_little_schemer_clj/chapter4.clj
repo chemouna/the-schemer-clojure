@@ -116,3 +116,59 @@
 
 ;(no-nums '(5 2 "c"))
 ;(no-nums '(1 "a" 4 2 "c"))
+
+(defn all-nums
+  [coll]
+  (cond
+    (empty? coll) ()
+    (not (number? (first coll))) (all-nums (rest coll))
+    :else (cons (first coll) (all-nums (rest coll)))))
+
+;(all-nums '(1 "a" 2 "b" 3 "c"))
+
+;; it could be written this way but clojure's = handles both cases
+(comment "
+
+(defn eqan?
+  [a1 a2]
+  (cond
+    (and (number? a1) (number? a2)) (= a1 a2)
+    (or (number? a1) (number? a2)) false
+    :else (eq? a1 a2)))
+
+")
+
+(defn occur
+  [a coll]
+  (cond
+    (empty? coll) 0
+    (= a (first coll) a) (add1 (occur a (rest coll ))) ;; we could use eqan? if clojure's = didnt handle all cases but it does
+    :else (occur a (rest coll))))
+
+;(occur 2 '(1 2 5 2 7 2))
+
+(defn one?
+  [n]
+  (cond
+    (zero? (sub1 n)) true
+    :else false))
+
+;(one? 1)
+;(one? 2)
+
+(defn one-2?
+  [n]
+  (cond
+    (zero? n) false
+    :else (zero? (sub1 n))))
+
+(defn one-3?
+  (= n 1)) ;; haha
+
+(defn rempick2
+  [n coll]
+  (cond
+    (one? n) (rest coll)
+    :else (cons (first coll) (rempick (sub1 n) (rest coll)))))
+
+;(rempick2 2 '(1 2 3 4))
