@@ -91,3 +91,24 @@
 (def multirember-eq (multirember-f =))
 
 ;(multirember-eq 2 '(1 2 3 4 5 2 8 2 2))
+
+(defn multiremberT
+  [test? lat]
+  (cond
+    (empty? lat) lat
+    (test? (first lat)) (multiremberT test? (rest lat))
+    :else (cons (first lat) (multiremberT test? (rest lat)))))
+
+(defn eq?-tuna
+  [x]
+  (= x 'tuna))
+
+(defn multiinsertLR
+  [new oldl oldr lat]
+  (cond
+    (empty? lat) lat
+    (= (first lat) oldl) (cons new (cons oldl (rest lat)))
+    (= (first lat) oldr) (cons oldr (cons new (rest lat)))
+    :else (cons (first lat) (multiinsertLR new oldl oldr (rest lat)))))
+
+
