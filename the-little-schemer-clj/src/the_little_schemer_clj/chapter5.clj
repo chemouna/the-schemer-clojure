@@ -138,3 +138,10 @@
 (eqlist2? '(2 3) '())
 ")
 
+(defn equal?
+  [s1 s2]
+  (cond
+    (and (atom? s1) (atom? s2)) (= s1 s2)
+    (or (atom? s1) (atom? s2)) false
+    :else (eqlist? s1 s2)))
+
