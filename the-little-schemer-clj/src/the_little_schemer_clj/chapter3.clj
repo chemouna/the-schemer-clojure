@@ -1,4 +1,4 @@
-(ns the-little-schemer.chapter3
+(ns the-little-schemer-clj.chapter3
   (:use the-little-schemer.chapter2))
 
 (defn rember

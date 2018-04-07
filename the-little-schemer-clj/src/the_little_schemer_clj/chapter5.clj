@@ -1,6 +1,7 @@
 (ns the-little-schemer-clj.chapter5
   (:use [the-little-schemer-clj.chapter4]
-        [the-little-schemer-clj.chapter2]))
+        [the-little-schemer-clj.chapter2]
+        [the-little-schemer-clj.chapter3]))
 
 (defn rember*
   [a l]
@@ -252,4 +253,10 @@
     (empty? lat) lat
     (member? (first lat) (rest lat)) (makeset (rest lat))
     :else (cons (first lat) (makeset (rest lat))) ))
+
+(defn makeset2
+  [lat]
+  (cond
+    (empty? lat) lat
+    :else (cons (first lat) (makeset2 (multirember (first lat) (rest lat))))))
 
