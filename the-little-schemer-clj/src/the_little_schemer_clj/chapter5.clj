@@ -1,4 +1,5 @@
-(ns the-little-schemer-clj.chapter5)
+(ns the-little-schemer-clj.chapter5
+  (:use the-little-schemer-clj.chapter4))
 
 (defn rember*
   [a l]
@@ -37,3 +38,14 @@
       :else (cons (first l) (insertR* new old (rest l))))))
 
 ;(insertR* 1 2 '(2 (3 2) (2 4)))
+
+(defn occur*
+  [a coll]
+  (cond
+    (empty? coll) 0
+    (= a (first coll)) (add1 (occur* a (rest coll)))
+    :else (cond
+            (list? (first coll)) (plus (occur* a (first coll)) (occur* a (rest coll)))
+            :else (occur* a (rest coll)))))
+
+; (occur* 2 '(1 (3 2) (5 2 8) 2 4))
