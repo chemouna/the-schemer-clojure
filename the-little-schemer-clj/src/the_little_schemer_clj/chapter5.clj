@@ -145,3 +145,27 @@
     (or (atom? s1) (atom? s2)) false
     :else (eqlist? s1 s2)))
 
+(defn eqlist3?
+  [l1 l2]
+  (cond
+    (and (empty? l1) (empty? l2)) true
+    (or (empty? l1) (empty? l2)) false
+    :else (and (equal? (first l1) (first l2)) (eqlist3? (rest l1) (rest l2)))))
+
+;(eqlist3? '(1 (2 3) 4) '(1 (2 3) 4))
+;(eqlist3? '(1 2) '(4 5))
+
+(defn numbered?
+  [aexp]
+  (cond
+    (atom? aexp) (number? aexp)
+    (and (numbered? (first aexp))
+         (numbered? (first (rest (rest aexp))))
+         (or (= (first (rest aexp)) '*)
+             (= (first (rest aexp)) '+)
+             (= (first (rest aexp)) '-)
+             (= (first (rest aexp)) '/)
+             (= (first (rest aexp)) 'exp))) true
+    :else false))
+
+
