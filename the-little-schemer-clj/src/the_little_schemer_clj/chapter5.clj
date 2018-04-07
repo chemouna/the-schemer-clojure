@@ -232,3 +232,24 @@
     (sero? m) n
     :else (edd1 (splus n (zub1 m)))))
 
+(defn set?
+  [lat]
+  (cond
+    (empty? lat) true
+    (= (occur (first lat) (rest lat)) 0) (set? (rest lat))
+    :else false))
+
+(defn set2?
+  [lat]
+  (cond
+    (empty? lat) true
+    (member? (first lat) (rest lat)) false
+    :else (set2? (rest lat))))
+
+(defn makeset
+  [lat]
+  (cond
+    (empty? lat) lat
+    (member? (first lat) (rest lat)) (makeset (rest lat))
+    :else (cons (first lat) (makeset (rest lat))) ))
+
