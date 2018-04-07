@@ -71,3 +71,21 @@
             :else (cons (first coll) (insertL* new old (rest coll))))))
 
 ; (insertL* 3 1 '(2 1 6 8 1 9))
+
+(defn member*
+  [a coll]
+  (cond
+    (empty? coll) false
+    :else (or (= (first coll) a)
+              (and (list? (first coll)) (member* a (first coll)))
+              (member* a (rest coll)))))
+
+(defn member2*
+  [a coll]
+  (cond
+    (empty? coll) false
+    (not (list? (first coll))) (or (= (first coll) a) (member2* a (rest coll)))
+    :else (or (member2* a (first coll)) (member2* a (rest coll)))))
+
+;(member* 7 '(1 (2 3) 5 (7 4) 2 (6 9)))
+;(member2* 7 '(1 (2 3) 5 (7 4) 2 (6 9)))
