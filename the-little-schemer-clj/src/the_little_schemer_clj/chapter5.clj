@@ -49,3 +49,14 @@
             :else (occur* a (rest coll)))))
 
 ; (occur* 2 '(1 (3 2) (5 2 8) 2 4))
+
+(defn subst*
+  [new old coll]
+  (cond
+    (empty? coll) coll
+    (= old (first coll)) (cons new (subst* new old (rest coll)))
+    :else (cond
+            (list? (first coll)) (cons (subst* new old (first coll)) (subst* new old (rest coll)))
+            :else (cons (first coll) (subst* new old (rest coll))))))
+
+; (subst* 3 1 '(2 1 6 1 1 1 8 1))
