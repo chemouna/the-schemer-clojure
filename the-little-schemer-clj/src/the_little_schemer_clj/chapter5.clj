@@ -3,8 +3,6 @@
         [the-little-schemer-clj.chapter2]
         [the-little-schemer-clj.chapter3]))
 
-(require '[clojure.tools.trace :as trace])
-
 (defn rember*
   [a l]
   (cond
@@ -159,16 +157,16 @@
 ;(eqlist3? '(1 2) '(4 5))
 
 (defn numbered?
-  [aexp]
+  [e]
   (cond
-    (atom? aexp) (number? aexp)
-    (and (numbered? (first aexp))
-         (numbered? (first (rest (rest aexp))))
-         (or (= (first (rest aexp)) '*)
-             (= (first (rest aexp)) '+)
-             (= (first (rest aexp)) '-)
-             (= ((require first (rest aexp)) '/)
-             (= (first (rest aexp)) 'exp))) true
+    (atom? e) (number? e)
+    (and (numbered? (first e))
+         (numbered? (first (rest (rest e))))
+         (or (= (first (rest e)) '*)
+             (= (first (rest e)) '+)
+             (= (first (rest e)) '-)
+             (= (first (rest e)) '/)
+             (= (first (rest e)) 'e))) true
     :else false))
 
 (defn value
@@ -338,4 +336,40 @@
 (defn third
   [l]
   (first (rest (rest l))))
+
+(defn fun?
+  [rel]
+  (set? (firsts rel)))
+
+(defn revrel
+  [rel]
+  (cond
+    (empty? rel) rel
+    :else (cons (build (second (first rel)) (first (first rel))) (revrel (rest rel)))))
+
+(defn revpair
+  [pair]
+  (build (second pair) (first pair)))
+
+(defn revrel2
+  [rel]
+  (cond
+    (empty? rel) rel
+    :else (cons (revpair (first rel)) (revrel2 (rest rel)))))
+
+(defn seconds
+  [coll]
+  (cond
+    (empty? coll) ()
+    :else (cons (second (first coll))
+                (seconds (rest coll)))))
+
+(defn fullfun?
+  [fun]
+  (set? (seconds fun)))
+
+(defn one-to-one
+  [fun]
+  (fun? (revrel fun)))
+
 
