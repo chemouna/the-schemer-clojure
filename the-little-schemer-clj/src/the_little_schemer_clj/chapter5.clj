@@ -168,4 +168,16 @@
              (= (first (rest aexp)) 'exp))) true
     :else false))
 
+(defn value
+  [nexp]
+  (cond
+      (atom? nexp) nexp
+      (= (first (rest nexp)) '*) (* (value (first nexp)) (value (first (rest (rest nexp)))))
+      (= (first (rest nexp)) '+) (+ (value (first nexp)) (value (first (rest (rest nexp)))))
+      (= (first (rest nexp)) '-) (- (value (first nexp)) (value (first (rest (rest nexp)))))
+      (= (first (rest nexp)) '/) (/ (value (first nexp)) (value (first (rest (rest nexp)))))
+      (= (first (rest nexp)) 'exp) (exp (value (first nexp)) (value (first (rest (rest nexp))))) ))
+
+;(value '(1 + (2 + 3)))
+;(value '(3 * (1 + 2)))
 
