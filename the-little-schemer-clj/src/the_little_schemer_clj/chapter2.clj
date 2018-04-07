@@ -1,4 +1,4 @@
-(ns the-little-schemer.chapter2)
+(ns the-little-schemer-clj.chapter2)
 
 (def atom?
   (complement coll?))

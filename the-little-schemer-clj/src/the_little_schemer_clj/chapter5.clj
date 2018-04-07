@@ -1,5 +1,6 @@
 (ns the-little-schemer-clj.chapter5
-  (:use the-little-schemer-clj.chapter4))
+  (:use [the-little-schemer-clj.chapter4]
+        [the-little-schemer-clj.chapter2]))
 
 (defn rember*
   [a l]
@@ -99,3 +100,41 @@
 ;(leftmost '((1 2) 3))
 ;(leftmost '(3 4))
 ;(leftmost '((6 2 1)))
+
+(defn eqlist?
+  [l1 l2]
+  (cond
+    (and (empty? l1) (empty? l2)) true
+    (or (empty? l1) (empty? l2)) false
+    (= (first l1) (first l2)) (eqlist? (rest l1) (rest l2))
+    :else false))
+
+(defn eqlist2?
+  [l1 l2]
+  (cond
+    (and (empty? l1) (empty? l2)) true
+    (and (empty? l1) (atom? (first l2))) false
+    (empty? l1) false
+    (and (atom? (first l1)) (empty? l2)) false
+    (and (atom? (first l1)) (atom? (first l2)))
+         (and (= (first l1) (first l2)) (eqlist2? (rest l1) (rest l2)))
+    (atom? (first l1)) false
+    (empty? l2) false
+    (atom? (first l2)) false
+    :else (and (eqlist2? (first l1) (first l2))
+                                (eqlist2? (rest l1) (rest l2)))))
+
+(comment "
+(eqlist? '(1 (2 3) 4 (5 6)) '(1 (2 3) 4 (5 6)))
+(eqlist? '() '())
+(eqlist? '(1 2) '(4 5))
+(eqlist? '() '(1 2))
+(eqlist? '(2 3) '())
+
+(eqlist2? '(1 (2 3) 4 (5 6)) '(1 (2 3) 4 (5 6)))
+(eqlist2? '() '())
+(eqlist2? '(1 2) '(4 5))
+(eqlist2? '() '(1 2))
+(eqlist2? '(2 3) '())
+")
+
