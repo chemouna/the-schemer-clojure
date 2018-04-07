@@ -89,3 +89,13 @@
 
 ;(member* 7 '(1 (2 3) 5 (7 4) 2 (6 9)))
 ;(member2* 7 '(1 (2 3) 5 (7 4) 2 (6 9)))
+
+(defn leftmost
+  [coll]
+  (cond
+    (not (list? (first coll))) (first coll)
+    :else (leftmost (first coll))))
+
+;(leftmost '((1 2) 3))
+;(leftmost '(3 4))
+;(leftmost '((6 2 1)))
