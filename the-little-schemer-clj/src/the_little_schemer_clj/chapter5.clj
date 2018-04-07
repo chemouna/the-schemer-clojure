@@ -60,3 +60,14 @@
             :else (cons (first coll) (subst* new old (rest coll))))))
 
 ; (subst* 3 1 '(2 1 6 1 1 1 8 1))
+
+(defn insertL*
+  [new old coll]
+  (cond
+    (empty? coll) coll
+    (= old (first coll)) (cons new (cons old (insertL* new old (rest coll))))
+    :else (cond
+            (list? (first coll)) (cons (insertL* new old (first coll)) (insertL* new old (rest coll)))
+            :else (cons (first coll) (insertL* new old (rest coll))))))
+
+; (insertL* 3 1 '(2 1 6 8 1 9))
