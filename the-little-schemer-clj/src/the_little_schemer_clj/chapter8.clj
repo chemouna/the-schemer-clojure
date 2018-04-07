@@ -1,7 +1,8 @@
 (ns the-little-schemer-clj.chapter8
-  (:use [the-little-schemer-clj.chapter4]
-        [the-little-schemer-clj.chapter2]
-        [the-little-schemer-clj.chapter3]))
+  (:use [the-little-schemer-clj.chapter2]
+        [the-little-schemer-clj.chapter3]
+        [the-little-schemer-clj.chapter4]
+        [the-little-schemer-clj.chapter6]))
 
 (defn rember-f
   [test? a l]
@@ -56,3 +57,37 @@
 
 (def insertL2 (insert-g seqL))
 (def insertR2 (insert-g seqR))
+
+(defn seqSubst
+  [new old lat]
+  (cons new (rest lat)))
+
+(def subst3 (insert-g seqSubst))
+
+(defn atom-to-function
+  [x]
+  (cond
+    (= x '+) plus
+    (= x '-) minus
+    (= x '*) mult
+    (= x 'exp) exp))
+
+(defn value3
+  [nexp]
+  (cond
+    (atom? nexp) nexp
+    :else ((atom-to-function (operator nexp))
+           (value3 (first-sub-exp nexp))
+           (value3 (second-sub-exp nexp)))))
+
+(defn multirember-f
+  [test?]
+  (fn [a lat]
+    (cond
+      (empty? lat) lat
+      (test? (first lat) a) ((multirember-f test?) a (rest lat))
+      :else (cons (first lat) ((multirember-f test?) a (rest lat))))))
+
+(def multirember-eq (multirember-f =))
+
+;(multirember-eq 2 '(1 2 3 4 5 2 8 2 2))
