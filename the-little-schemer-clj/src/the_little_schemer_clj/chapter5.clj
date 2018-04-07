@@ -260,3 +260,19 @@
     (empty? lat) lat
     :else (cons (first lat) (makeset2 (multirember (first lat) (rest lat))))))
 
+(defn subset?
+  [s1 s2]
+  (cond
+    (empty? s1) true
+    :else (and (member? (first s1) s2) (subset? (rest s1) s2))))
+
+(defn eqset?
+  [s1 s2]
+  (and (subset? s1 s2) (subset? s2 s1)))
+
+(defn intersect?
+  [s1 s2]
+  (cond
+    (empty? s1) false
+    :else (or (member? (first s1) s2) (intersect? (rest s1) s2)))
+
