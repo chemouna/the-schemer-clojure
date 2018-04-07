@@ -163,6 +163,7 @@
     :else (zero? (sub1 n))))
 
 (defn one-3?
+  [n]
   (= n 1)) ;; haha
 
 (defn rempick2

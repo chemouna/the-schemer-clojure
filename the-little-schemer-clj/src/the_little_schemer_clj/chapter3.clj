@@ -1,5 +1,5 @@
 (ns the-little-schemer-clj.chapter3
-  (:use the-little-schemer.chapter2))
+  (:use the-little-schemer-clj.chapter2))
 
 (defn rember
   [a lat]

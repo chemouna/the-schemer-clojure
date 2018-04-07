@@ -3,6 +3,8 @@
         [the-little-schemer-clj.chapter2]
         [the-little-schemer-clj.chapter3]))
 
+(require '[clojure.tools.trace :as trace])
+
 (defn rember*
   [a l]
   (cond
@@ -165,7 +167,7 @@
          (or (= (first (rest aexp)) '*)
              (= (first (rest aexp)) '+)
              (= (first (rest aexp)) '-)
-             (= (first (rest aexp)) '/)
+             (= ((require first (rest aexp)) '/)
              (= (first (rest aexp)) 'exp))) true
     :else false))
 
@@ -274,5 +276,66 @@
   [s1 s2]
   (cond
     (empty? s1) false
-    :else (or (member? (first s1) s2) (intersect? (rest s1) s2)))
+    :else (or (member? (first s1) s2) (intersect? (rest s1) s2))))
+
+(defn intersect
+  [s1 s2]
+   (cond
+    (empty? s1) ()
+    (member? (first s1) s2) (cons (first s1) (intersect (rest s1) s2))
+    :else (intersect (rest s1) s2)))
+
+(defn union
+  [s1 s2]
+  (cond
+    (empty? s1) s2
+    (member? (first s1) s2) (union (rest s1) s2)
+    :else (cons (first s1) (union (rest s1) s2))))
+
+(defn diff
+  [s1 s2]
+  (cond
+    (empty? s1) ()
+    (member? (first s1) s2) (diff (rest s1) s2)
+    :else (cons (first s1) (diff (rest s1) s2))))
+
+(comment "
+;; wrong first attempt :(
+(defn intersectall
+  [lset]
+  (cond
+
+    (member* (first (first lset)) (rest lset)) (first (first lset))
+    :else (intersectall (cons (rest (first lset)) (rest lset)))))
+")
+
+(defn intersectall
+  [lset]
+  (cond
+    (empty? (rest lset)) (first lset)
+    :else (intersect (first lset) (intersectall (rest lset)))))
+
+;(intersectall '((1 2 3) (4 8 2) (9 7 2 3)))
+
+(defn a-pair?
+  [x]
+  (cond
+    (atom? x) false
+    (empty? x) false
+    (empty? (rest x)) false
+    (empty? (rest (rest x))) true
+    :else false))
+
+; (a-pair? '())
+; (a-pair? '(1 2))
+; (a-pair? '(1 2 3))
+; (a-pair? 2)
+
+(defn build
+  [s1 s2]
+  (cons s1 (cons s2 '())))
+
+(defn third
+  [l]
+  (first (rest (rest l))))
 
