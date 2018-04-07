@@ -214,5 +214,21 @@
     (= (operator nexp) 'exp) (exp (value (first-sub-exp nexp)) (value (second-sub-exp nexp)))
     ))
 
+(defn sero?
+  [n]
+  (empty? n))
 
+(defn edd1
+  [n]
+  (cons () n))
+
+(defn zub1
+  [n]
+  (rest n))
+
+(defn splus
+  [n m]
+  (cond
+    (sero? m) n
+    :else (edd1 (splus n (zub1 m)))))
 
