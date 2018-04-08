@@ -1,5 +1,5 @@
 
-(ns the-little-schemer-clj.chapter6
+(ns the-little-schemer-clj.chapter7
   (:use [the-little-schemer-clj.chapter4]
         [the-little-schemer-clj.chapter2]
         [the-little-schemer-clj.chapter3]))
@@ -104,9 +104,9 @@
   [s1 s2]
   (cons s1 (cons s2 '())))
 
-(defn third
-  [l]
-  (first (rest (rest l))))
+;(defn third
+;  [l]
+;  (first (rest (rest l))))
 
 (defn fun?
   [rel]
@@ -142,9 +142,3 @@
 (defn one-to-one
   [fun]
   (fun? (revrel fun)))
-
-
-
-
-
-Find files or url: /Users/mounacheikhna/Documents/repos/mine/the-schemer-clojure/the-little-schemer-clj/src/the_little_schemer_clj/
