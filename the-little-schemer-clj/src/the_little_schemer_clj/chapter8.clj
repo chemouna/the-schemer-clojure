@@ -2,7 +2,10 @@
   (:use [the-little-schemer-clj.chapter2]
         [the-little-schemer-clj.chapter3]
         [the-little-schemer-clj.chapter4]
-        [the-little-schemer-clj.chapter6]))
+        [the-little-schemer-clj.chapter6]
+        [clojure.tools.trace :as trace]))
+
+(trace/trace-ns 'the-little-schemer-clj.chapter8)
 
 (defn rember-f
   [test? a l]
@@ -111,4 +114,72 @@
     (= (first lat) oldr) (cons oldr (cons new (rest lat)))
     :else (cons (first lat) (multiinsertLR new oldl oldr (rest lat)))))
 
+(defn multirember&co
+  [a lat col]
+  (cond
+    (empty? lat) (col '() '())
+    (= (first lat) a) (multirember&co a (rest lat)
+                                      (fn [newlat seen]
+                                        (col newlat (cons (first lat) seen))))
+    :else (multirember&co a (rest lat)
+                          (fn [newlat seen]
+                            (col (cons (first lat) newlat) seen)))))
+
+;; it seems to be a function that adds the values equal to a into the collection seen and delete them from the passed;; list and those that dont match into new lat
+
+(defn a-friend
+  [x y]
+  (empty? y))
+
+;(multirember&co "tuna" '("strawberries" "tuna" "and" "swordfish") a-friend)
+;(multirember&co "tuna" '() a-friend)
+;(multirember&co "tuna" '("tuna") a-friend)
+
+(defn multiinsertLR&co
+  [new oldl oldr lat col]
+  (cond
+    (empty? lat) (col '() 0 0)
+    (= (first lat) oldl) (multiinsertLR&co new oldl oldr (rest lat)
+                                          (fn [newlat cl cr]
+                                            (col (cons new (cons oldl newlat)) (add1 cl) cr)))
+    (= (first lat) oldr) (multiinsertLR&co new oldl oldr (rest lat)
+                                           (fn [newlat cl cr]
+                                             (col (cons oldr (cons new newlat)) cl (add1 cr))))
+    :else (multiinsertLR&co new oldl oldr (rest lat)
+                            (fn [newlat cl cr]
+                              (col (cons (first lat) newlat) cl cr)))))
+
+(defn evens-only*
+  [l]
+  (cond
+    (empty? l) l
+    (atom? (first l)) (cond
+                        (even? (first l)) (cons (first l) (evens-only* (rest l)))
+                        :else (evens-only* (rest l)))
+    :else (cons (evens-only* (first l)) (evens-only* (rest l)))))
+
+; (evens-only* '((9 1 28) 3 10 ((9 9) 76) 2))
+
+(defn evens-only*&co
+  [l col]
+  (cond
+    (empty? l) (col '() 1 0)
+    (atom? (first l)) (cond
+                        (even? (first l)) (evens-only*&co (rest l)
+                                                          (fn [newlat me so]
+                                                            (col (cons (first l) newlat) (* me (first l)) so)))
+                        :else (evens-only*&co (rest l)
+                                        (fn [newlat me so]
+                                          (col newlat me (+ so (first l))))))
+    :else (evens-only*&co (first l)
+                          (fn [fnl fme fso]
+                            (evens-only*&co (rest l)
+                                            (fn [newlat me so]
+                                              (col (cons fnl newlat) (* fme me) (+ fso so))))))))
+
+(defn the-last-friend
+  [newl product sum]
+  (cons sum (cons product newl)))
+
+(evens-only*&co '((9 1 2 8) 3 10 ((9 9) 7 6) 2) the-last-friend)
 
