@@ -104,9 +104,9 @@
   [s1 s2]
   (cons s1 (cons s2 '())))
 
-;(defn third
-;  [l]
-;  (first (rest (rest l))))
+(defn third
+  [l]
+  (first (rest (rest l))))
 
 (defn fun?
   [rel]
