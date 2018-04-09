@@ -85,3 +85,110 @@
 ;(A 0 (A 1 1))
 ;(A 0 3)
 ;(A 4 3)
+
+(defn eternity
+  [x]
+  (recur x))
+
+;;; length0
+(fn [l]
+  (cond
+    (empty? l) 0
+    :else (eternity (rest l))))
+
+;;; length<=1
+(fn [l]
+  (cond
+    (empty? l) 0
+    :else (add1
+           ((fn [l]
+              (cond
+                (empty? l) 0
+                :else (eternity (rest l))))
+            (rest l)))))
+
+;;; length<=2
+(fn [l]
+  (cond
+    (empty? l) 0
+    :else (add1
+           ((fn [l]
+              (cond
+                (empty? l) 0
+                :else (add1
+                       ((fn [l]
+                          (cond
+                            (empty? l) 0
+                            :else (eternity (rest l))))
+                        (rest l)))))
+            (rest l)))))
+
+;; length 0
+(fn [length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (add1 (length (rest l)))
+      )) eternity)
+
+;; using mk-length with length 0
+((fn [mk-length]
+  (mk-length eternity))
+(fn [length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (add1 (length (rest l)))))))
+
+;; length <= 1
+((fn [mk-length]
+  (mk-length
+   (mk-length eternity)))
+(fn [length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (add1 (length (rest l)))))))
+
+;; length <= 2
+((fn [mk-length]
+  (mk-length
+   (mk-length
+    (mk-length eternity))))
+(fn [length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (add1 (length (rest l)))))))
+
+;; length <= 3
+((fn
+  [mk-length]
+  (mk-length
+   (mk-length
+    (mk-length
+     (mk-length eternity)))))
+(fn [length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (add1 (length (rest l)))))))
+
+;; length <= 1 with mk-length
+((fn [mk-length]
+  (mk-length mk-length))
+(fn [mk-length]
+  (fn [l]
+    (cond
+      (empty? l) 0
+      :else (inc ((mk-length eternity) (rest l)))))))
+
+
+((fn [mk-length]
+  (mk-length mk-length))
+(fn [mk-length]
+  (fn [length]
+    (fn [l]
+      (cond
+        (empty? l) 0
+        :else (inc (length (rest l))))) (mk-length mk-length))))
