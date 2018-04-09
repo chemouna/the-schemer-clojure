@@ -1,4 +1,3 @@
-
 (ns the-little-schemer-clj.chapter10
   (:use [the-little-schemer-clj.chapter2]
         [the-little-schemer-clj.chapter3]
@@ -108,6 +107,22 @@
   [e table]
   (evcon (cond-lines-of e) table))
 
+(defn evlis
+  [args table]
+  (cond
+    (empty? args) '()
+    :else (cons (meaning (first args) table) (evlis (rest args) table))))
+
+(def function-of first)
+
+(def arguments-of rest)
+
+(defn *application
+  [e table]
+  (apply
+   (meaning (function-of e) table)
+   (evlis (arguments-of e) table)))
+
 ;(*cond (cond
 ;         (coffee) klatsch
 ;         :else "party")
@@ -125,3 +140,41 @@
 (defn value
   [e]
   (meaning e '()))
+
+(defn primitive?
+  [l]
+  (= (first l) 'primitive))
+
+(defn non-primitive?
+  [l]
+  (= (first l) 'non-primitive))
+
+(defn apply-primitive [name vals]
+  (println "apply-primitive " name vals)
+  (cond
+    (= name (quote car)) (first (first vals))
+    (= name (quote cdr)) (rest (first vals))
+    (= name (quote cons)) (cons (first vals) (second vals))
+    (= name (quote =)) (= (first vals) (second vals))
+    (= name (quote atom?)) (not (seq? (first vals) ))
+    (= name (quote not)) (not (first vals) )
+    (= name (quote null)) (empty? (first vals) )
+    (= name (quote number)) (number? (first vals) )
+    (= name (quote zero)) (zero? (first vals) )
+    (= name (quote add1)) (add1 (first vals) )
+    (= name (quote sub1)) (sub1 (first vals) )
+     true (str "no matching primitive to apply for " name vals)))
+
+(defn apply
+  [fun vals]
+  (cond
+    (primitive? fun) (apply-primitive (second fun) vals)
+    (non-primitive? fun) (apply-closure (second fun) vals)))
+
+(defn apply-closure
+  [closure vals]
+  (meaning (body-of closure)
+           (extend-table
+            (new-entry (formals-of closure) vals)
+            (table-of closure))))
+
